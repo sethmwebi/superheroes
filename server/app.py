@@ -20,17 +20,20 @@ migrate = Migrate(app, db)
 db.init_app(app)
 
 
+# home
 @app.route("/")
 def index():
     return "<h1>Code challenge</h1>"
 
 
+# get all heroes
 @app.route("/heroes", methods=["GET"])
 def get_heroes():
     heroes = Hero.query.all()
     return jsonify([hero.to_dict(rules=("-hero_powers",)) for hero in heroes]), 200
 
 
+# get hero by id
 @app.route("/heroes/<int:id>", methods=["GET"])
 def get_hero_by_id(id):
     hero = Hero.query.get(id)
@@ -39,6 +42,7 @@ def get_hero_by_id(id):
     return jsonify(hero.to_dict()), 200
 
 
+# get all powers
 @app.route("/powers", methods=["GET"])
 def get_powers():
     powers = Power.query.all()
@@ -48,6 +52,7 @@ def get_powers():
     )
 
 
+# get power by id
 @app.route("/powers/<int:id>", methods=["GET"])
 def get_power_by_id(id):
     power = Power.query.get(id)
