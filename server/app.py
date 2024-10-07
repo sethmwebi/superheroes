@@ -56,5 +56,23 @@ def get_power_by_id(id):
     return jsonify(power.to_dict(rules=("-hero_powers", "-heroes"))), 200
 
 
+# update powers
+@app.route("/powers/<int:id>", methods=["PATCH"])
+def patch_power_by_id(id):
+    power = Power.query.get(id)
+    if not power:
+        return jsonify({"error": "Power not found"}), 404
+
+    data = request.get_json()
+    description = data.get("description", "")
+
+    if len(description) < 20:
+        return jsonify({"errors": ["validation errors"]}), 400
+
+    power.description = description
+    db.session.commit()
+    return jsonify(power.to_dict()), 200
+
+
 if __name__ == "__main__":
     app.run(port=5555, debug=True)
